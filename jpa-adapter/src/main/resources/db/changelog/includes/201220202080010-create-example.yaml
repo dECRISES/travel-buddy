@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-t_travelBuddy
+      author: Paul WILLIAMS
+      changes:
+        - createTable:
+            tableName: T_TRAVEL_BUDDY
+            columns:
+              - column:
+                  name: TECH_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+          createSequence:
+            sequenceName: SEQ_T_TRAVEL_BUDDY
+            startValue: 1
+            incrementBy: 1
+      rollback:
+        - dropSequence:
+            sequenceName: SEQ_T_TRAVEL_BUDDY
+        - dropTable:
+            tableName: T_TRAVEL_BUDDY
+  - changeSet:
+      id: create-table-t_travelBuddy_aud
+      author: Paul WILLIAMS
+      changes:
+        - createTable:
+            schemaName: TRAVEL_BUDDY_AUDIT
+            tableName: T_TRAVEL_BUDDY_AUD
+            columns:
+              - column:
+                  name: TECH_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: REV
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_T_TRAVEL_BUDDY_AUD_REV
+                    references: TRAVEL_BUDDY_AUDIT.REVINFO(REV)
+              - column:
+                  name: REVTYPE
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            schemaName: TRAVEL_BUDDY_AUDIT
+            tableName: T_TRAVEL_BUDDY_AUD
+            columnNames: TECH_ID, REV
+      rollback:
+        - dropTable:
+            schemaName: TRAVEL_BUDDY_AUDIT
+            tableName: T_TRAVEL_BUDDY_AUD
+            cascadeConstraints: true
+
